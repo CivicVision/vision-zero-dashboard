@@ -43,8 +43,9 @@ ready = (error, results) ->
 
 	dayFormat = d3.timeFormat('%Y-%m-%d')
 	yearFormat = d3.timeFormat('%Y')
+	timeParser = d3.timeParse("%Y-%m-%d %H:%M:%S")
 	d3.map(accidentsKilled2017, (d) ->
-		d.date = new Date(d.date_hour)
+		d.date = timeParser(d.date_hour)
 		d.day = dayFormat(d.date)
 		d.year = yearFormat(d.date)
 	)

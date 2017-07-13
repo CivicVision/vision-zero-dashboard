@@ -1,0 +1,47 @@
+body
+  color: #fff
+  background: $base-blue
+.content
+  @include outer-container()
+  padding: 1.5em 0
+  +media($large-phone)
+    padding: 1.5em
+  &.address
+    padding: 1em 1.5em
+
+.content-wrapper
+  @include outer-container()
+  text-align: center
+  @include media($large-screen)
+    padding-left: 1em
+    padding-right: 1em
+
+.section-alternate
+  background: #fff
+  color: #000
+#welcome
+  h1
+
+  h2
+    font-size: 2em
+    text-align: center
+    margin-bottom: 2em
+.cv
+  .testimonial
+    padding-top: 1em
+    padding-bottom: 1em
+  .cta-btn
+    margin-top: -3em
+    text-align: center
+    +media($large-phone)
+      +span-columns(12)
+
+hr.alternate
+  border-bottom: 1px solid #17335d
+#how
+  color: #565656
+  h3
+    color: #565656
+    text-align: center
+    strong
+      color: $orange-accent

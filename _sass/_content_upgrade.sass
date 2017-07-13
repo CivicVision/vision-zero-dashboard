@@ -1,0 +1,24 @@
+.content-upgrade
+  +clearfix
+  padding: 1em
+  margin: 2em 0
+  background: $blue
+  color: $color-white
+  .headline
+    +span-columns(8)
+    padding: 30px 45px
+    +media($large-phone)
+      +span-columns(12)
+      padding:  0 0 1em 0
+      text-align: center
+    h4
+      margin: 0
+      padding: 0
+  .email-signup
+    +span-columns(4)
+    +cta-button($accent-color, $color-white, 12)
+    text-align: center
+    +media($large-phone)
+      +span-columns(12)
+.modal
+  text-transform: normal

@@ -1,0 +1,17 @@
+#footer
+  $base-spacing: 1.5em !default
+  a
+    color: #9DC9CF
+    &:hover
+      text-decoration: underline
+  #items
+    padding: ($base-spacing * 2) $gutter
+    @include span-columns(12)
+    @include media($mobile)
+      @include span-columns(4)
+    li.item
+      @include span-columns(4 of 12)
+      @include media($mobile)
+        @include span-columns(4)
+        margin-bottom: 2em
+

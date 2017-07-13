@@ -1,0 +1,61 @@
+.blog-content
+  @include outer-container()
+  margin-top: 50px
+  background: #fff
+  color: #333
+  .header
+    h1
+      margin-bottom: 10px
+    .details
+      text-align: center
+      color: #777
+
+  .content
+    @include span-columns(10)
+    @include shift(1)
+    @include media($mobile)
+      @include span-columns(4)
+      @include shift(0)
+      padding: 1em
+      font-size: 1.4em
+      code
+        padding: 0.5em
+    h2
+      text-align: left
+      @include media($mobile)
+        text-align: center
+    ul
+      @extend %default-ul
+.blog
+  @include outer-container()
+  article
+    background: #fff
+    @include span-columns(10)
+    @include shift(1)
+    color: #333
+    padding: 1em
+    @include media($mobile)
+      @include span-columns(4)
+      @include shift(0)
+    h2
+      text-align: left
+      @include media($mobile)
+        +clearfix
+      a
+        @include media($mobile)
+          float: left
+      time
+        float: right
+        font-size: 0.6em
+        color: #777
+        @include media($mobile)
+          font-size: 0.5em
+          float: left
+          clear: left
+    .summary
+      color: #777
+      @include media($mobile)
+        font-size: 1.2em
+    .more
+      @include media($mobile)
+        font-size: 1.2em

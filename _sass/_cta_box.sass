@@ -1,0 +1,56 @@
+.cta-form.box
+  background: $cta-box-background
+  background: -moz-linear-gradient(top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.6) 50%, rgba(0, 0, 0, 0.8) 100%)
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(0, 0, 0, 0.8)), color-stop(50%, rgba(0, 0, 0, 0.6)), color-stop(100%, rgba(0, 0, 0, 0.8)))
+  background: -webkit-linear-gradient(top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.6) 50%, rgba(0, 0, 0, 0.8) 100%)
+  background: -o-linear-gradient(top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.6) 50%, rgba(0, 0, 0, 0.8) 100%)
+  background: -ms-linear-gradient(top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.6) 50%, rgba(0, 0, 0, 0.8) 100%)
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.6) 50%, rgba(0, 0, 0, 0.8) 100%)
+  margin-bottom: 11px
+  padding: 10px 10px 17px
+  text-align: center
+  border-radius: 7px
+
+  h3, h2
+    color: #fff
+    @include font(28px, 'SegoeUI-SemiBold')
+    letter-spacing: -2px
+    line-height: 28px
+    padding: 20px 40px
+
+  h3
+    font-size: 22px
+    line-height: 26px
+    padding: 12px 30px
+
+  p
+    padding-bottom: 10px
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.7)
+
+  form
+    padding: 10px 0 16px
+
+  .field
+    @include span-columns(4)
+    background-color: #fff
+    border: 0
+    font-size: 14px
+    margin-bottom: 16px
+    padding: 6px 10px
+    box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.3)
+    border-radius: 4px
+
+  .submit
+    background: $cta-box-submit-button-color url(../images/submit-arrow.png) no-repeat 220px 10px
+    border: 1px solid $cta-box-submit-button-border-color
+    color: $cta-font-color
+    cursor: pointer
+    @include font(18px, 'SegoeUI-SemiBold')
+    height: 35px
+    line-height: 18px
+    padding: 0 26px 4px 0
+    @include span-columns(4)
+    -webkit-appearance: none
+
+    &:hover
+      background-color: $cta-box-submit-button-hover-color

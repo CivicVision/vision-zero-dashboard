@@ -1,0 +1,52 @@
+@import 'base/modal'
+
+.modal
+  &.email-signup
+    $large-screen-signup: 53.75em
+    .modal-inner
+      width: 50%
+    .modal-fade-screen
+      +media($large-screen-signup)
+        padding-top: 10em
+  .signup
+    color: #000
+    .form-content
+      @include span-columns(10)
+      @include shift(1)
+    h3,h4,h5
+      color: #000
+      margin: 0 0 1em
+      padding: 0
+    h3
+      +font-size(25)
+      letter-spacing: normal
+    input
+      +span-columns(10 of 10)
+      padding: 0.3em
+      margin: 0.5em 0
+      +font-size(18)
+    .subscribe.button
+      +cta-button($lead-pages-color-link,$color-white)
+      padding: 0.5em
+    .form-footer
+      clear: both
+      +row()
+    &.free-report
+      .explanation-content
+        @include span-columns(4)
+        img
+          float: left
+          margin-right: 1em
+        h5
+          text-align: justify
+        +media($large-screen)
+          @include span-columns(10)
+      .form-content
+        @include span-columns(6)
+        h3
+          text-align: center
+        input
+          +span-columns(6 of 6)
+        +media($large-screen)
+          @include span-columns(10)
+

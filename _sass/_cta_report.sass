@@ -1,0 +1,45 @@
+@import "cta_colors"
+@import "cta_fonts"
+@import "cta_box"
+
+$mobile: new-breakpoint(max-width 500px 4)
+
+.content-box .cta-form.box
+  margin: 34px 0
+  @include span-columns(4)
+  @include shift(6)
+  z-index: 2
+  @include media($mobile) 
+    padding: 0
+    @include span-columns(4)
+    @include shift(0)
+
+  &.type2
+    padding-top: 77px
+    .cta-form form 
+      padding-top: 6px
+#bg 
+  height: 100%
+  left: 0
+  overflow: hidden
+  position: absolute
+  right: 0
+  width: 100%
+  z-index: 1
+
+  img 
+    filter: alpha(opacity=0)
+    min-width: 100%
+    min-height: auto
+    -moz-opacity: 0
+    opacity: 0
+    position: relative
+
+.footer 
+  color: #fff
+  text-align: center
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.7)
+
+  a 
+    color: #fff
+    margin-left: 4px

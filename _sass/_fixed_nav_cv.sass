@@ -1,0 +1,29 @@
+.nav.fixed
+  border-bottom: 1px solid #0c3e8a
+  background: #254575
+  .nav-content
+    .logo-container
+      margin-top: 5px
+      float: left
+      .logo
+        float: left
+        @include media($large-phone)
+          +span-columns(5 of 10)
+          margin: 0
+          margin-top: 5px
+      h4
+        float: left
+        color: #fff
+        margin: 0.2em 1em
+        +font-size(12)
+        line-height: 40px
+        @include media($large-phone)
+          +span-columns(4 of 10)
+          +shift(1)
+          +font-size(12)
+    ul.nav-small
+      +media($laptop-screen-down)
+        display: none
+      li
+        a
+          color: #fff

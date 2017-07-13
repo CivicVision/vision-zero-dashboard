@@ -1,0 +1,23 @@
+.nav.fixed
+  position: fixed
+  top: 0
+  right: 0
+  width: 100%
+  height: 50px
+  background: #fff
+  border-bottom: 1px solid #e0e6ec
+  background: #f8fbff
+  z-index: 2
+  .nav-content
+    +outer-container()
+    .nav-small
+      margin-top: 13px
+      float: right
+      +media($large-phone)
+        display: none
+      a
+        color: $blue
+    .logo
+      margin-top: 10px
+      +media($large-phone)
+        margin-left: 10px

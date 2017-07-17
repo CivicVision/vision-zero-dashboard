@@ -42,6 +42,7 @@ ready = (error, results) ->
 	d3.selectAll('.last-life-lost-location').text(lastAccidentAddress)
 
 	initMap(lastAccidentKilled)
+	show2017Map(accidentsKilled2017)
 
 	dayFormat = d3.timeFormat('%Y-%m-%d')
 	yearFormat = d3.timeFormat('%Y')

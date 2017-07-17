@@ -1,4 +1,7 @@
-var geocoder;
+function latLngFromAccident(accident) {
+  var locationArr = accident.location.split(" ");
+  return {lat: parseFloat(locationArr[0]), lng: parseFloat(locationArr[1])};
+}
 function formatAddress(d) {
 	street_name = d.street_name+' '+d.street_type;
 	if(d.cross_st_name) {
@@ -17,7 +20,6 @@ function initMap(lastAccident) {
 		center: {lat: 32.824, lng: -117.235},
     disableDefaultUI: true
 	});
-  geocoder = new google.maps.Geocoder();
   var sv = new google.maps.StreetViewService();
   panorama = new google.maps.StreetViewPanorama(
     document.getElementById('map-pano'),
@@ -26,52 +28,42 @@ function initMap(lastAccident) {
       panControl: false,
       enableCloseButton: false
     });
-  address = formatAddress(lastAccident);
-	geocoder.geocode({'address': address}, function(results, status) {
-		if (status === 'OK') {
-			map.setCenter(results[0].geometry.location);
-			map.setZoom(16);
-			var marker = new google.maps.Marker({
-				map: map,
-				position: results[0].geometry.location,
-        color: 'green',
-        label: lastAccident.killed
-			});
-      panorama.setPosition(results[0].geometry.location);
-      panorama.setPov({
-        heading: 270,
-        pitch: 0
-      });
-      panorama.setVisible(true);
-		} else {
-      document.getElementById('map-error').innerHTML = 'Unable to find the address to show on a map';
-		}
-	});
+  var address = formatAddress(lastAccident);
+  var accidentLocation = latLngFromAccident(lastAccident);
+  map.setCenter(accidentLocation);
+  map.setZoom(16);
+  var marker = new google.maps.Marker({
+    map: map,
+    position: accidentLocation,
+    color: 'green',
+    label: lastAccident.killed
+  });
+  panorama.setPosition(accidentLocation);
+  panorama.setPov({
+    heading: 270,
+    pitch: 0
+  });
+  panorama.setVisible(true);
 }
 function addAccidentToMap(map, accident) {
   var address = formatAddress(accident);
   var infowindow = new google.maps.InfoWindow({
   });
-  function addToMap(results, status) {
-    var dateFormat = d3.timeFormat('%B, %d');
-    var timeFormat = d3.timeFormat('%I %p');
-    var date = dateFormat(new Date(this.date_time))+' '+timeFormat(new Date(this.date_hour));
-    var address = formatAddress(this);
-    var contentString = '<h5>'+address+'</h5><p><b>Date:</b> '+date+'</p><p><b># fatalities:</b> '+this.killed+'<br/><b># injuries:</b> '+this.injured+'</p>';
-    if (status === 'OK') {
-      var marker = new google.maps.Marker({
-        map: map,
-        position: results[0].geometry.location,
-        title: contentString,
-        label: this.killed
-      });
-      google.maps.event.addListener(marker,'click', function() {
-        infowindow.open(map, this);
-        infowindow.setContent(this.title);
-      });
-    } else { }
-  }
-  geocoder.geocode({'address': address}, addToMap.bind(accident));
+  var dateFormat = d3.timeFormat('%B, %d');
+  var timeFormat = d3.timeFormat('%I %p');
+  var date = dateFormat(new Date(accident.date_time))+' '+timeFormat(new Date(accident.date_hour));
+  var contentString = '<h5>'+address+'</h5><p><b>Date:</b> '+date+'</p><p><b># fatalities:</b> '+accident.killed+'<br/><b># injuries:</b> '+accident.injured+'</p>';
+  var accidentLocation = latLngFromAccident(accident);
+  var marker = new google.maps.Marker({
+    map: map,
+    position: accidentLocation,
+    title: contentString,
+    label: accident.killed
+  });
+  google.maps.event.addListener(marker,'click', function() {
+    infowindow.open(map, this);
+    infowindow.setContent(this.title);
+  });
 }
 function show2017Map(accidents) {
 	var map2017 = new google.maps.Map(document.getElementById('map-2017'), {

@@ -56,11 +56,12 @@ ready = (error, results) ->
 	.key( (d) -> d.day)
 	.rollup(sumKilled)
 	.object(accidentsKilled2017)
-	calendar2017 = calendarChart().colorRange(['#662506']).yearRange(d3.range(2017,2018))
+	width = parseInt(d3.select('#calendar-2017-killed').style('width'), 10)
+	calendar2017 = calendarChart().colorRange(['#662506']).yearRange(d3.range(2017,2018)).width(width)
 	d3.select('#calendar-2017-killed').data([dateDataKilled2017]).call(calendar2017)
 
 if d3.selectAll("#vision-zero-dashboard").size() > 0
 	d3.queue(2)
 	.defer(d3.csv, "https://s3.amazonaws.com/traffic-sd/accidents_killed_injured_b_year.csv")
-	.defer(d3.csv, "https://s3.amazonaws.com/traffic-sd/accidents_killed_2017.csv")
+	.defer(d3.csv, "https://s3.amazonaws.com/traffic-sd/accidents_killed_2017_geocoded.csv")
 	.awaitAll(ready)

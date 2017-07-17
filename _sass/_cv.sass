@@ -8,6 +8,8 @@ body
     padding: 1.5em
   &.address
     padding: 1em 1.5em
+  h3,h2,h4
+    margin-top: 2em
 
 .content-wrapper
   @include outer-container()
@@ -45,3 +47,14 @@ hr.alternate
     text-align: center
     strong
       color: $orange-accent
+.row
+  +clearfix
+  clear: both
+#map
+  height: 200px
+  +span-columns(6)
+  +omega()
+  +shift(1)
+#map-pano
+  +span-columns(4)
+  height: 200px

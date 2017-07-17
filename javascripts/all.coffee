@@ -41,6 +41,8 @@ ready = (error, results) ->
 	d3.selectAll('.last-life-lost-time').text(timeFormat(new Date(lastAccidentKilled.date_hour)))
 	d3.selectAll('.last-life-lost-location').text(lastAccidentAddress)
 
+	initMap(lastAccidentKilled)
+
 	dayFormat = d3.timeFormat('%Y-%m-%d')
 	yearFormat = d3.timeFormat('%Y')
 	timeParser = d3.timeParse("%Y-%m-%d %H:%M:%S")

@@ -49,7 +49,7 @@ function addAccidentToMap(map, accident) {
   var address = formatAddress(accident);
   var infowindow = new google.maps.InfoWindow({
   });
-  var dateFormat = d3.timeFormat('%B, %d');
+  var dateFormat = d3.timeFormat('%B, %d %Y');
   var timeFormat = d3.timeFormat('%I %p');
   var date = dateFormat(new Date(accident.date_time))+' '+timeFormat(new Date(accident.date_hour));
   var contentString = '<h5>'+address+'</h5><p><b>Date:</b> '+date+'</p><p><b># fatalities:</b> '+accident.killed+'<br/><b># injuries:</b> '+accident.injured+'</p>';

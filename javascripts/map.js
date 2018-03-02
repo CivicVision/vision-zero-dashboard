@@ -66,7 +66,7 @@ function addAccidentToMap(map, accident) {
   });
 }
 function show2017Map(accidents) {
-	var map2017 = new google.maps.Map(document.getElementById('map-2017'), {
+	var map2017 = new google.maps.Map(document.getElementById('map-2018'), {
 		zoom: 10,
 		center: {lat: 32.824, lng: -117.235}
 	});

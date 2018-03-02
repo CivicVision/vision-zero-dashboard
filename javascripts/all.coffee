@@ -31,7 +31,7 @@ construct_street_name = (d) ->
 ready = (error, results) ->
 	summaryByYear = results[0]
 	accidentsKilled2017 = results[1]
-	summary2017 = _.find(summaryByYear, (d) -> d.year == "2017")
+	summary2017 = _.find(summaryByYear, (d) -> d.year == "2018")
 	lastAccidentKilled = accidentsKilled2017[accidentsKilled2017.length-1]
 	lastAccidentAddress = construct_street_name(lastAccidentKilled)
 	dateFormat = d3.timeFormat('%B, %d')
@@ -56,12 +56,12 @@ ready = (error, results) ->
 	.key( (d) -> d.day)
 	.rollup(sumKilled)
 	.object(accidentsKilled2017)
-	width = parseInt(d3.select('#calendar-2017-killed').style('width'), 10)
-	calendar2017 = calendarChart().colorRange(['#662506']).yearRange(d3.range(2017,2018)).width(width)
-	d3.select('#calendar-2017-killed').data([dateDataKilled2017]).call(calendar2017)
+	width = parseInt(d3.select('#calendar-2018-killed').style('width'), 10)
+	calendar2017 = calendarChart().colorRange(['#662506']).yearRange(d3.range(2018,2019)).width(width)
+	d3.select('#calendar-2018-killed').data([dateDataKilled2017]).call(calendar2017)
 
 if d3.selectAll("#vision-zero-dashboard").size() > 0
 	d3.queue(2)
 	.defer(d3.csv, "https://s3.amazonaws.com/traffic-sd/accidents_killed_injured_b_year.csv")
-	.defer(d3.csv, "https://s3.amazonaws.com/traffic-sd/accidents_killed_2017_geocoded.csv")
+	.defer(d3.csv, "https://s3.amazonaws.com/traffic-sd/accidents_killed_2018_geocoded.csv")
 	.awaitAll(ready)

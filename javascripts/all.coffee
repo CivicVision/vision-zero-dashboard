@@ -31,6 +31,7 @@ construct_street_name = (d) ->
 ready = (error, results) ->
   summaryByYear = results[0]
   accidentsKilled2017 = results[2]
+  accidentsKilled2016 = results[3]
   accidentsKilled2018 = results[1]
   summary2018 = _.find(summaryByYear, (d) -> d.year == "2018")
   lastAccidentKilled = accidentsKilled2018[accidentsKilled2018.length-1]
@@ -59,11 +60,12 @@ ready = (error, results) ->
   calendar2017 = calendarChart().colorRange(['#662506']).yearRange(d3.range(2018,2019)).width(width)
   d3.select('#calendar-2018-killed').data([dateDataKilled2018]).call(calendar2017)
   initMap(lastAccidentKilled)
-  show2017Map(accidentsKilled2018.concat(accidentsKilled2017))
+  show2017Map(accidentsKilled2018.concat(accidentsKilled2017, accidentsKilled2016))
 
 if d3.selectAll("#vision-zero-dashboard").size() > 0
   d3.queue(2)
   .defer(d3.csv, "https://s3.amazonaws.com/traffic-sd/accidents_killed_injured_b_year.csv")
   .defer(d3.csv, "https://s3.amazonaws.com/traffic-sd/accidents_killed_2018_geocoded.csv")
   .defer(d3.csv, "https://s3.amazonaws.com/traffic-sd/accidents_killed_2017_geocoded.csv")
+  .defer(d3.csv, "https://s3.amazonaws.com/traffic-sd/accidents_killed_2016_geocoded.csv")
   .awaitAll(ready)

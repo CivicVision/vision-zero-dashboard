@@ -56,9 +56,6 @@ ready = (error, results) ->
   .key( (d) -> d.day)
   .rollup(sumKilled)
   .object(accidentsKilled2018)
-  width = parseInt(d3.select('#calendar-2018-killed').style('width'), 10)
-  calendar2017 = calendarChart().colorRange(['#662506']).yearRange(d3.range(2018,2019)).width(width)
-  d3.select('#calendar-2018-killed').data([dateDataKilled2018]).call(calendar2017)
   initMap(lastAccidentKilled)
   show2017Map(accidentsKilled2018.concat(accidentsKilled2017, accidentsKilled2016))
 

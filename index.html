@@ -26,6 +26,55 @@ gtm_id: GTM-NDLQVKT
     <h3>Heatmap of traffic fatalities from 2016-2018</h3>
 		<div id="map-2018"></div>
 	</div>
+
+  <div id="vision-zero">
+    <div class="row">
+    <h2>When are San Diego streets unsafe?</h2>
+
+    <div class="row">
+      <p>Advocacy groups and individuals have called on the City of San Diego to forward with their Vision Zero strategy. Unfortunately, we has a long way to go. This page highlights the current status of traffic fatalities in the City of San Diego by using the most up to date datset from the Open Data Portal of the city of San Diego.</p>
+
+    <div class="row">
+      <h4>The most dangerous time is between <span class="most-collisions-start-hour">3pm</span> and <span class="most-collisions-end-hour">7pm</span>.</h4>
+      <p>At <span class="most-per-accident">4pm</span> 54% of collisions results in at least one person injured.
+      Although the most collisions occur on 12 am only 11% result in injuries.</p>
+      <div id="dow-chart-killed-injured-per-accident" class="d-o-w"></div>
+    </div>
+    <div class="row">
+      <h4>The most collisions happen between <span class="most-collisions-start-hour">2pm</span> and <span class="most-collisions-end-hour">6pm</span></h4>
+      <p>After analyzing <span class="number-of-collisions">26,330</span> collisions from <span class="start-collisions-data">Jan 1st 2015</span> until today the unsafest time is between <span class="most-collisions-start-hour">2pm</span> and <span class="most-collisions-end-hour">6pm</span>. The most collisions occur at <span class="most-collisions-hour">12am</span>.</p>
+      <div id="dow-chart-accidents" class="d-o-w"></div>
+    </div>
+    <div class="row">
+      <h4>The most injuries occur between  <span class="most-injuries-start-hour">3pm</span> and <span class="most-injuries-end-hour">6pm</span></h4>
+      <div id="dow-chart-injuries" class="d-o-w"></div>
+    </div>
+    <div class="row">
+      <h4>The most fatalities occur between <span class="most-injuries-start-hour">6pm</span> and <span class="most-injuries-end-hour">8pm</span></h4>
+      <p>This dataset is to be used with caution. Certain data discrepancies were reported to the City. The data team is still investigating and have not fixed it.</p>
+      <div id="dow-chart-killed" class="d-o-w"></div>
+    </div>
+    <div class="row">
+      <h4>Most collisions occur on a Friday</h4>
+      <p>With 4091 collisions between 2015 and today Friday is the day with the most collisions. But Thursday and Saturday are not very far away. </p>
+      <div id="dow-chart-single" class="d-o-w"></div>
+    </div>
+    <div class="row">
+      <h4>Most injuries occur on a Monday</h4>
+      <p>With 2623 people injured between 2015 and today Monday is the day with the most injuries. </p>
+      <div id="dow-chart-single-injured" class="d-o-w"></div>
+    </div>
+    <div class="row">
+      <h4>Weekends at Midnight have a high accident rate.</h4>
+      <div id="dow-hod-chart" class="d-o-w"></div>
+    </div>
+    <div class="row">
+      <h4>Weekdays between 2pm and 6pm are the most dangerous in regards to injuries.</h4>
+      <div id="dow-hod-chart-injured" class="d-o-w"></div>
+    </div>
+
+    <div id="tooltip"></div>
+  </div>
 	<div class="row">
 		<h4>Data Update Frequency</h4>
 		<p>Every day the data from the City of San Diego's Open Data Portal is updated with new data released by the San Diego Police Department. Every day at 2am the information on this site will be updated as well.</p>

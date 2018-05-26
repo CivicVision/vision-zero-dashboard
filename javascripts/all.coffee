@@ -58,6 +58,7 @@ ready = (error, results) ->
   .object(accidentsKilled2018)
   initMap(lastAccidentKilled)
   show2017Map(accidentsKilled2018.concat(accidentsKilled2017, accidentsKilled2016))
+  setTimeout(showTimeRelatedData, 3000)
 
 if d3.selectAll("#vision-zero-dashboard").size() > 0
   d3.queue(2)

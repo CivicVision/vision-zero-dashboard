@@ -30,6 +30,24 @@ sumInjured = (data) ->
 sumKilledInjured = (data) ->
   d3.sum(data, killedInjured)
 
+nestDate = (dow, data, valueKey) ->
+  startDate = new Date(2015,4,3)
+  newDate = d3.timeDay.offset(startDate,dow)
+  dowHFormat = d3.timeFormat("%w")
+  entry = _.filter(data, (d) -> dowHFormat(d.date) == dowHFormat(newDate))
+  value = d3.sum(entry, (d) -> d[valueKey]) if entry
+  {
+    "key": newDate
+    "value": value
+  }
+
+mapDateData = (data, valueyKey) ->
+  startDate = new Date(2015,4,3)
+  [ {
+    "key": startDate,
+    "values": (nestDate(dow, data, valueyKey) for dow in [0..6])
+  }]
+
 createDoWData = (data, rollup = sumKilledInjured) ->
   d3.nest()
     .key( (d) -> d.date)
@@ -81,7 +99,7 @@ changeNeighborhoodData = (data, beatId) ->
   vega.embed("#accidents-neighborhood-graph", accidentsNeighborhoodSpec, opt)
 
 
-if d3.selectAll("#vision-zero").size() > 0
+@showTimeRelatedData = () =>
   ready = (error, results) ->
     killedInjuredByYear = results[0]
     killedInjuredByYearAndPoliceBeat = results[1]
@@ -188,45 +206,57 @@ if d3.selectAll("#vision-zero").size() > 0
       percentFormat = d3.format('.2%')
       "<h2>#{hourFormat(d.key)}</h2><p>#{percentFormat(d.value) || "0%"}</p>"
 
-    dowChart = dayofWeekChart().valueKey("injured").startDate(new Date(2016,0,1)).colorDomain([0,maxInjured]).mapData(mapData).yValue(yValue).classValue(classValue).tooltipTemplate(tooltipTemplate)
-    d3.select('#dow-chart').data([accidentsData]).call(dowChart)
-
-    dowChartAccidents = dayofWeekChart().valueKey("accidents").startDate(new Date(2016,0,1)).colorDomain([0,maxAccidents]).mapData(mapAccidentsData).yValue(yValue).tooltipTemplate(tooltipTemplate)
-    d3.select('#dow-chart-accidents').data([accidentsData]).call(dowChartAccidents)
-
-    dowChartInjuries = dayofWeekChart().valueKey("injured").startDate(new Date(2016,0,1)).colorDomain([0,maxInjured]).mapData(mapInjuredData).yValue(yValue).tooltipTemplate(tooltipTemplate)
-    d3.select('#dow-chart-injuries').data([accidentsData]).call(dowChartInjuries)
-
-    dowChartKilled = dayofWeekChart().valueKey("killed").startDate(new Date(2016,0,1)).colorDomain([0,maxKilled]).mapData(mapKilledData).yValue(yValue).tooltipTemplate(tooltipTemplate)
-    d3.select('#dow-chart-killed').data([accidentsData]).call(dowChartKilled)
-
-    # 90,980
-    dowChartKilledInjuredPerAccident = dayofWeekChart().valueKey("killed").startDate(new Date(2016,0,1)).colorDomain([0,0.6]).mapData(mapKilledInjuredPerAccidentData).yValue(yValue).tooltipTemplate(tooltipTemplatePerAccident)
-    d3.select('#dow-chart-killed-injured-per-accident').data([accidentsData]).call(dowChartKilledInjuredPerAccident)
-
     dowTooltipTemplate = (d) ->
       weekdayFormat = d3.timeFormat('%A')
       "<h2>#{weekdayFormat(d.key)}</h2><p>#{parseInt(d.value) || 0}</p>"
 
-    d3.map(fullHourAccidents, (d) ->
-      d.date = timeParser(d.date_hour)
-    )
-    injuredMax = d3.max(fullHourAccidents, (d) -> d.injured)
-    injuredMin = d3.min(fullHourAccidents, (d) -> d.injured)
-    dowTInjured = dayofWeekSingleChart().valueKey("injured").colorDomain([injuredMin,injuredMax]).tooltipTemplate(dowTooltipTemplate).yValue((d) -> 'Injured')
-    d3.select('#dow-chart-single-injured').data([fullHourAccidents]).call(dowTInjured)
 
-    accidentsMax = d3.max(fullHourAccidents, (d) -> d.accidents)
-    accidentsMin = d3.min(fullHourAccidents, (d) -> d.accidents)
+    accidentsChart = () =>
+      dowChartAccidents = dayofWeekChart().valueKey("accidents").startDate(new Date(2016,0,1)).colorDomain([0,maxAccidents]).mapData(mapAccidentsData).yValue(yValue).tooltipTemplate(tooltipTemplate)
+      d3.select('#dow-chart-accidents').data([accidentsData]).call(dowChartAccidents)
+    injuredChart = () =>
+      dowChartInjuries = dayofWeekChart().valueKey("injured").startDate(new Date(2016,0,1)).colorDomain([0,maxInjured]).mapData(mapInjuredData).yValue(yValue).tooltipTemplate(tooltipTemplate)
+      d3.select('#dow-chart-injuries').data([accidentsData]).call(dowChartInjuries)
+    killedChart = () =>
+      dowChartKilled = dayofWeekChart().valueKey("killed").startDate(new Date(2016,0,1)).colorDomain([0,maxKilled]).mapData(mapKilledData).yValue(yValue).tooltipTemplate(tooltipTemplate)
+      d3.select('#dow-chart-killed').data([accidentsData]).call(dowChartKilled)
+    killedInjuredChart = () =>
+      dowChartKilledInjuredPerAccident = dayofWeekChart().valueKey("killed").startDate(new Date(2016,0,1)).colorDomain([0,0.6]).mapData(mapKilledInjuredPerAccidentData).yValue(yValue).tooltipTemplate(tooltipTemplatePerAccident)
+      d3.select('#dow-chart-killed-injured-per-accident').data([accidentsData]).call(dowChartKilledInjuredPerAccident)
 
-    dowT = dayofWeekSingleChart().valueKey("accidents").colorDomain([accidentsMin,accidentsMax]).tooltipTemplate(dowTooltipTemplate).yValue((d) -> 'Collisions')
-    d3.select('#dow-chart-single').data([fullHourAccidents]).call(dowT)
+    singleInjuredChart = () =>
+      d3.map(fullHourAccidents, (d) ->
+        d.date = timeParser(d.date_hour)
+      )
+      hourAccidentsData = mapDateData(fullHourAccidents, 'injured')
+      injuredMax = d3.max(hourAccidentsData[0].values, (d) -> d.value)
+      injuredMin = d3.min(hourAccidentsData[0].values, (d) -> d.value)
+      dowTInjured = dayofWeekSingleChart().valueKey("injured").colorDomain([injuredMin,injuredMax]).tooltipTemplate(dowTooltipTemplate).yValue((d) -> 'Injured')
+      d3.select('#dow-chart-single-injured').data([fullHourAccidents]).call(dowTInjured)
+    singleAccidentsChart = () =>
+      hourAccidentsData = mapDateData(fullHourAccidents, 'accidents')
+      accidentsMax = d3.max(hourAccidentsData[0].values, (d) -> d.value)
+      accidentsMin = d3.min(hourAccidentsData[0].values, (d) -> d.value)
 
-    dowHofD = dayofWeekChart().valueKey("accidents").colorDomain([0,400])
-    d3.select('#dow-hod-chart').data([fullHourAccidents]).call(dowHofD)
+      dowT = dayofWeekSingleChart().valueKey("accidents").colorDomain([accidentsMin,accidentsMax]).tooltipTemplate(dowTooltipTemplate).yValue((d) -> 'Collisions')
+      d3.select('#dow-chart-single').data([fullHourAccidents]).call(dowT)
 
-    dowHofDInjured = dayofWeekChart().valueKey("injured").colorDomain([0,220])
-    d3.select('#dow-hod-chart-injured').data([fullHourAccidents]).call(dowHofDInjured)
+    hodChart = () =>
+      dowHofD = dayofWeekChart().valueKey("accidents").colorDomain([0,400])
+      d3.select('#dow-hod-chart').data([fullHourAccidents]).call(dowHofD)
+
+    hodInjuredChart = () =>
+      dowHofDInjured = dayofWeekChart().valueKey("injured").colorDomain([0,220])
+      d3.select('#dow-hod-chart-injured').data([fullHourAccidents]).call(dowHofDInjured)
+
+    setTimeout(injuredChart, 500)
+    setTimeout(accidentsChart, 500)
+    setTimeout(killedChart, 600)
+    setTimeout(killedInjuredChart, 700)
+    setTimeout(singleInjuredChart, 700)
+    setTimeout(singleAccidentsChart, 800)
+    setTimeout(hodChart, 2400)
+    setTimeout(hodInjuredChart, 2600)
 
   d3.queue(2)
     .defer(d3.csv, "https://s3.amazonaws.com/traffic-sd/accidents_killed_injured_b_year.csv")

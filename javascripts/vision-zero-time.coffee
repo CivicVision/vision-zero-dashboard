@@ -2,6 +2,8 @@
 ---
 timeParser = d3.timeParse("%Y-%m-%d %H:%M:%S")
 hourFormat = d3.timeFormat('%I %p')
+dowHFormat = d3.timeFormat("%w")
+dowFormat = d3.timeFormat("%A")
 
 killed = (d) ->
   parseInt(d.killed)
@@ -265,12 +267,19 @@ changeNeighborhoodData = (data, beatId) ->
       hourAccidentsData = mapDateData(fullHourAccidents, 'injured')
       injuredMax = d3.max(hourAccidentsData[0].values, (d) -> d.value)
       injuredMin = d3.min(hourAccidentsData[0].values, (d) -> d.value)
+      maxEntry = _.find(hourAccidentsData[0].values, { value: injuredMax})
+      d3.selectAll('.most-injuries-weekday').text(dowFormat(maxEntry.key))
+      d3.selectAll('.most-injuries-weekday-amount').text(maxEntry.value)
+
       dowTInjured = dayofWeekSingleChart().valueKey("injured").colorDomain([injuredMin,injuredMax]).tooltipTemplate(dowTooltipTemplate).yValue((d) -> 'Injured')
       d3.select('#dow-chart-single-injured').data([fullHourAccidents]).call(dowTInjured)
     singleAccidentsChart = () =>
       hourAccidentsData = mapDateData(fullHourAccidents, 'accidents')
       accidentsMax = d3.max(hourAccidentsData[0].values, (d) -> d.value)
       accidentsMin = d3.min(hourAccidentsData[0].values, (d) -> d.value)
+      maxEntry = _.find(hourAccidentsData[0].values, { value: accidentsMax})
+      d3.selectAll('.most-collisions-weekday').text(dowFormat(maxEntry.key))
+      d3.selectAll('.most-collisions-weekday-amount').text(maxEntry.value)
 
       dowT = dayofWeekSingleChart().valueKey("accidents").colorDomain([accidentsMin,accidentsMax]).tooltipTemplate(dowTooltipTemplate).yValue((d) -> 'Collisions')
       d3.select('#dow-chart-single').data([fullHourAccidents]).call(dowT)

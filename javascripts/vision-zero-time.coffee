@@ -239,6 +239,10 @@ changeNeighborhoodData = (data, beatId) ->
       dowChartInjuries = dayofWeekChart().valueKey("injured").startDate(new Date(2016,0,1)).colorDomain([0,maxInjured]).mapData(mapInjuredData).yValue(yValue).tooltipTemplate(tooltipTemplate)
       d3.select('#dow-chart-injuries').data([accidentsData]).call(dowChartInjuries)
     killedChart = () =>
+      data = mapKilledData(accidentsData)
+      timeEdges = findTimeEdges(data[0].values)
+      d3.selectAll('.most-fatalities-start-hour').text(hourFormat(timeEdges.min))
+      d3.selectAll('.most-fatalities-end-hour').text(hourFormat(timeEdges.max))
       dowChartKilled = dayofWeekChart().valueKey("killed").startDate(new Date(2016,0,1)).colorDomain([0,maxKilled]).mapData(mapKilledData).yValue(yValue).tooltipTemplate(tooltipTemplate)
       d3.select('#dow-chart-killed').data([accidentsData]).call(dowChartKilled)
     killedInjuredChart = () =>

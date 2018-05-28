@@ -1,6 +1,7 @@
 ---
 ---
 timeParser = d3.timeParse("%Y-%m-%d %H:%M:%S")
+hourFormat = d3.timeFormat('%I %p')
 
 killed = (d) ->
   parseInt(d.killed)
@@ -198,11 +199,9 @@ changeNeighborhoodData = (data, beatId) ->
       "hour #{color(parseInt(d.value || emptyValue))}"
 
     tooltipTemplate = (d) ->
-      hourFormat = d3.timeFormat('%I %p')
       "<h2>#{hourFormat(d.key)}</h2><p>#{parseInt(d.value) || 0}</p>"
 
     tooltipTemplatePerAccident = (d) ->
-      hourFormat = d3.timeFormat('%I %p')
       percentFormat = d3.format('.2%')
       "<h2>#{hourFormat(d.key)}</h2><p>#{percentFormat(d.value) || "0%"}</p>"
 
@@ -212,15 +211,39 @@ changeNeighborhoodData = (data, beatId) ->
 
 
     accidentsChart = () =>
-      dowChartAccidents = dayofWeekChart().valueKey("accidents").startDate(new Date(2016,0,1)).colorDomain([0,maxAccidents]).mapData(mapAccidentsData).yValue(yValue).tooltipTemplate(tooltipTemplate)
-      d3.select('#dow-chart-accidents').data([accidentsData]).call(dowChartAccidents)
+      data = mapAccidentsData(accidentsData)
+      mapData = (data) -> data
+      maxEntry = _.find(data[0].values, {value: maxAccidents})
+      timeEdges = findTimeEdges(data[0].values)
+      d3.selectAll('.most-collisions-start-hour').text(hourFormat(timeEdges.min))
+      d3.selectAll('.most-collisions-end-hour').text(hourFormat(timeEdges.max))
+      d3.selectAll('.number-of-collisions').text(d3.sum(data[0].values.map((d) -> d.value)))
+
+      #d3.select('.most-collisions-hour').text(hourFormat(maxEntry.key))
+      dowChartAccidents = dayofWeekChart().valueKey("accidents").startDate(new Date(2016,0,1)).colorDomain([0,maxAccidents]).mapData(mapData).yValue(yValue).tooltipTemplate(tooltipTemplate)
+      d3.select('#dow-chart-accidents').data([data]).call(dowChartAccidents)
+
     injuredChart = () =>
+      data = mapInjuredData(accidentsData)
+      mapData = (data) -> data
+      timeEdges = findTimeEdges(data[0].values)
+      d3.selectAll('.most-injuries-start-hour').text(hourFormat(timeEdges.min))
+      d3.selectAll('.most-injuries-end-hour').text(hourFormat(timeEdges.max))
       dowChartInjuries = dayofWeekChart().valueKey("injured").startDate(new Date(2016,0,1)).colorDomain([0,maxInjured]).mapData(mapInjuredData).yValue(yValue).tooltipTemplate(tooltipTemplate)
       d3.select('#dow-chart-injuries').data([accidentsData]).call(dowChartInjuries)
     killedChart = () =>
       dowChartKilled = dayofWeekChart().valueKey("killed").startDate(new Date(2016,0,1)).colorDomain([0,maxKilled]).mapData(mapKilledData).yValue(yValue).tooltipTemplate(tooltipTemplate)
       d3.select('#dow-chart-killed').data([accidentsData]).call(dowChartKilled)
     killedInjuredChart = () =>
+      #get max and update most-per-accident
+      data = mapKilledInjuredPerAccidentData(accidentsData)
+      timeEdges = findTimeEdges(data[0].values)
+      max = d3.max(data[0].values, (d) -> d.value)
+      maxEntry = _.find(data[0].values, { value: max})
+      d3.selectAll('.most-dangerous-start-hour').text(hourFormat(timeEdges.min))
+      d3.selectAll('.most-dangerous-end-hour').text(hourFormat(timeEdges.max))
+      d3.selectAll('.most-per-accident').text(hourFormat(maxEntry.key))
+      d3.selectAll('.most-per-accident-percent').text(d3.format(".0%")(maxEntry.value))
       dowChartKilledInjuredPerAccident = dayofWeekChart().valueKey("killed").startDate(new Date(2016,0,1)).colorDomain([0,0.6]).mapData(mapKilledInjuredPerAccidentData).yValue(yValue).tooltipTemplate(tooltipTemplatePerAccident)
       d3.select('#dow-chart-killed-injured-per-accident').data([accidentsData]).call(dowChartKilledInjuredPerAccident)
 
@@ -255,8 +278,8 @@ changeNeighborhoodData = (data, beatId) ->
     setTimeout(killedInjuredChart, 700)
     setTimeout(singleInjuredChart, 700)
     setTimeout(singleAccidentsChart, 800)
-    setTimeout(hodChart, 2400)
-    setTimeout(hodInjuredChart, 2600)
+    #setTimeout(hodChart, 2400)
+    #setTimeout(hodInjuredChart, 2600)
 
   d3.queue(2)
     .defer(d3.csv, "https://s3.amazonaws.com/traffic-sd/accidents_killed_injured_b_year.csv")

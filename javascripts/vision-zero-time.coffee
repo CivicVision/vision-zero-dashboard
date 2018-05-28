@@ -199,11 +199,18 @@ changeNeighborhoodData = (data, beatId) ->
       "hour #{color(parseInt(d.value || emptyValue))}"
 
     tooltipTemplate = (d) ->
-      "<h2>#{hourFormat(d.key)}</h2><p>#{parseInt(d.value) || 0}</p>"
+      explanation = d.name
+      if d.name is "injured"
+        explanation = "injuries"
+      if d.name is "accidents"
+        explanation = "collisions"
+      if d.name is "killed"
+        explanation = "fatalities"
+      "<h2>#{hourFormat(d.key)}</h2><p>#{parseInt(d.value) || 0} #{explanation}</p>"
 
     tooltipTemplatePerAccident = (d) ->
       percentFormat = d3.format('.2%')
-      "<h2>#{hourFormat(d.key)}</h2><p>#{percentFormat(d.value) || "0%"}</p>"
+      "<h2>#{hourFormat(d.key)}</h2><p>#{percentFormat(d.value) || "0%"} of collisions resulted in an injury</p>"
 
     dowTooltipTemplate = (d) ->
       weekdayFormat = d3.timeFormat('%A')
@@ -237,7 +244,7 @@ changeNeighborhoodData = (data, beatId) ->
     killedInjuredChart = () =>
       #get max and update most-per-accident
       data = mapKilledInjuredPerAccidentData(accidentsData)
-      timeEdges = findTimeEdges(data[0].values)
+      timeEdges = findTimeEdges(data[0].values, 0.2, 1)
       max = d3.max(data[0].values, (d) -> d.value)
       maxEntry = _.find(data[0].values, { value: max})
       d3.selectAll('.most-dangerous-start-hour').text(hourFormat(timeEdges.min))

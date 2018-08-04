@@ -230,7 +230,7 @@ changeNeighborhoodData = (data, beatId) ->
 
       #d3.select('.most-collisions-hour').text(hourFormat(maxEntry.key))
       dowChartAccidents = dayofWeekChart().valueKey("accidents").startDate(new Date(2016,0,1)).colorDomain([0,maxAccidents]).mapData(mapData).yValue(yValue).tooltipTemplate(tooltipTemplate)
-      d3.select('#dow-chart-accidents').data([data]).call(dowChartAccidents)
+      #d3.select('#dow-chart-accidents').data([data]).call(dowChartAccidents)
 
     injuredChart = () =>
       data = mapInjuredData(accidentsData)
@@ -300,6 +300,16 @@ changeNeighborhoodData = (data, beatId) ->
     setTimeout(singleAccidentsChart, 800)
     #setTimeout(hodChart, 2400)
     #setTimeout(hodInjuredChart, 2600)
+    d3.request("https://s3.amazonaws.com/traffic-sd/svg/accidents.svg")
+    .get((svg) ->
+      d3.select('#dow-chart-accidents').html(svg.response)
+    );
+
+    d3.request("https://s3.amazonaws.com/traffic-sd/svg/dowHodInjured.svg")
+    .get((svg) ->
+      d3.select('#dow-hod-chart-injured').html(svg.response)
+    );
+
 
   d3.queue(2)
     .defer(d3.csv, "https://s3.amazonaws.com/traffic-sd/accidents_killed_injured_b_year.csv")

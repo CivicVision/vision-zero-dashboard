@@ -1,5 +1,13 @@
 ---
 ---
+
+STREET_NAME = 'address_road_primary';
+STREET_TYPE = 'address_sfx_primary';
+STREET_NO = 'address_number_primary';
+STREET_DIR = 'address_pd_primary';
+CROSS_STREET = 'address_name_intersecting';
+CROSS_TYPE = 'address_sfx_intersecting';
+
 killed = (d) ->
   parseInt(d.killed)
 
@@ -19,7 +27,7 @@ sumKilledInjured = (data) ->
   d3.sum(data, killedInjured)
 
 construct_street_name = (d) ->
-  street_name = "#{d.street_name} #{d.street_type}"
+  street_name = "#{d[STREET_NAME]} #{d[STREET_TYPE]}"
   if d.cross_st_name
     return "#{street_name} / #{d.cross_st_name} #{d.cross_st_type}"
   else
@@ -28,17 +36,18 @@ construct_street_name = (d) ->
     else
       return "#{d.street_no} #{street_name}"
 
+thisYear = (new Date()).getFullYear()
+
 ready = (error, results) ->
-  summaryByYear = results[0]
-  accidentsKilled2017 = results[2]
-  accidentsKilled2016 = results[3]
-  accidentsKilled2018 = results[1]
-  summary2018 = _.find(summaryByYear, (d) -> d.year == "2018")
-  lastAccidentKilled = accidentsKilled2018[accidentsKilled2018.length-1]
+  summaryByYear = results.shift()
+  summary = _.find(summaryByYear, (d) -> d.year == "#{thisYear}")
+  lastYearKilled = results[ results.length-1 ]
+  lastAccidentKilled = lastYearKilled[ lastYearKilled.length-1]
   lastAccidentAddress = construct_street_name(lastAccidentKilled)
   dateFormat = d3.timeFormat('%B, %d')
   timeFormat = d3.timeFormat('%I %p')
-  d3.selectAll('.lifes-lost').text(summary2018.killed)
+  d3.selectAll('.current-year').text(thisYear)
+  d3.selectAll('.lifes-lost').text(summary.killed)
   d3.selectAll('.last-life-lost-date').text(dateFormat(new Date(lastAccidentKilled.date_time)))
   d3.selectAll('.last-life-lost-time').text(timeFormat(new Date(lastAccidentKilled.date_hour)))
   d3.selectAll('.last-life-lost-location').text(lastAccidentAddress)
@@ -47,7 +56,7 @@ ready = (error, results) ->
   dayFormat = d3.timeFormat('%Y-%m-%d')
   yearFormat = d3.timeFormat('%Y')
   timeParser = d3.timeParse("%Y-%m-%d %H:%M:%S")
-  d3.map(accidentsKilled2018, (d) ->
+  d3.map(lastYearKilled, (d) ->
     d.date = timeParser(d.date_hour)
     d.day = dayFormat(d.date)
     d.year = yearFormat(d.date)
@@ -55,15 +64,18 @@ ready = (error, results) ->
   dateDataKilled2018 = d3.nest()
   .key( (d) -> d.day)
   .rollup(sumKilled)
-  .object(accidentsKilled2018)
+  .object(lastYearKilled)
+  width = parseInt(d3.select('#calendar-2018-killed').style('width'), 10)
+  calendar2017 = calendarChart().colorRange(['#662506']).yearRange(d3.range(thisYear,thisYear+1)).width(width)
+  d3.select('#calendar-2018-killed').data([dateDataKilled2018]).call(calendar2017)
   initMap(lastAccidentKilled)
-  show2017Map(accidentsKilled2018.concat(accidentsKilled2017, accidentsKilled2016))
+  show2017Map(_.flatten(results))
   setTimeout(showTimeRelatedData, 3000)
 
 if d3.selectAll("#vision-zero-dashboard").size() > 0
-  d3.queue(2)
-  .defer(d3.csv, "https://s3.amazonaws.com/traffic-sd/accidents_killed_injured_b_year.csv")
-  .defer(d3.csv, "https://s3.amazonaws.com/traffic-sd/accidents_killed_2018_geocoded.csv")
-  .defer(d3.csv, "https://s3.amazonaws.com/traffic-sd/accidents_killed_2017_geocoded.csv")
-  .defer(d3.csv, "https://s3.amazonaws.com/traffic-sd/accidents_killed_2016_geocoded.csv")
-  .awaitAll(ready)
+  queue = d3.queue(2)
+  queue.defer(d3.csv, "https://s3.amazonaws.com/traffic-sd/accidents_killed_injured_b_year.csv")
+  d3.range(2016,thisYear+1).forEach((year) -> 
+    queue.defer(d3.csv, "https://s3.amazonaws.com/traffic-sd/accidents_killed_#{year}_geocoded.csv")
+  )
+  queue.awaitAll(ready)

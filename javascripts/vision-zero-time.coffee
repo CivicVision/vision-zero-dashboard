@@ -101,6 +101,7 @@ changeNeighborhoodData = (data, beatId) ->
   vega.embed("#killed-neighborhood-graph", killedNeighborhoodSpec, opt)
   vega.embed("#accidents-neighborhood-graph", accidentsNeighborhoodSpec, opt)
 
+thisYear = (new Date()).getFullYear()
 
 @showTimeRelatedData = () =>
   ready = (error, results) ->
@@ -108,7 +109,7 @@ changeNeighborhoodData = (data, beatId) ->
     killedInjuredByYearAndPoliceBeat = results[1]
     fullHourAccidents = results[2]
     accidentsData = results[3]
-    killedData2017 = _.find(killedInjuredByYear, (d) -> d.year == "2017")
+    killedData2017 = _.find(killedInjuredByYear, (d) -> d.year == "#{thisYear}")
     killed2017 = parseInt(killedData2017.killed)
 
     totalAccidents = parseInt(killedData2017.accidents)

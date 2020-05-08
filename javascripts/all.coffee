@@ -28,13 +28,13 @@ sumKilledInjured = (data) ->
 
 construct_street_name = (d) ->
   street_name = "#{d[STREET_NAME]} #{d[STREET_TYPE]}"
-  if d.cross_st_name
-    return "#{street_name} / #{d.cross_st_name} #{d.cross_st_type}"
+  if d[CROSS_STREET]
+    return "#{street_name} / #{d[CROSS_STREET]} #{d[CROSS_TYPE]}"
   else
-    if d.street_dir
-      return "#{d.street_no} #{d.street_dir} #{street_name}"
+    if d[STREET_DIR]
+      return "#{d[STREET_NO]} #{d[STREET_DIR]} #{street_name}"
     else
-      return "#{d.street_no} #{street_name}"
+      return "#{d[STREET_NO]} #{street_name}"
 
 thisYear = (new Date()).getFullYear()
 
